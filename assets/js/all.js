@@ -54,7 +54,6 @@ var addBtn = document.querySelector(".js-add-btn");
 var chooseArea = document.querySelector(".js-select-area");
 var dataNum = document.querySelector(".js-num");
 var alertModal = new bootstrap.Modal(document.getElementById("myModal"));
-init();
 addBtn.addEventListener("click", function (e) {
   e.preventDefault; // 清除提示框空值警告
 
@@ -148,7 +147,7 @@ function clearInputValue() {
   ticketDes.value = "";
 }
 
-function init() {
+function init(data) {
   data.forEach(function (item) {
     var newData = {};
     newData["ticketId"] = item.id;
@@ -172,4 +171,11 @@ function renderData(data) {
   });
   elList.innerHTML = str;
 }
+
+axios.get("https://raw.githubusercontent.com/hexschool/js-training/main/travelApi.json").then(function (response) {
+  // handle success
+  var axiosData = response.data.data;
+  init(axiosData);
+  console.log(axiosData);
+});
 //# sourceMappingURL=all.js.map
