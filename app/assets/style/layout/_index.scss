@@ -1,5 +1,38 @@
-.index__h1 {
-  color:#00cc99;
-  font-size: 20px;
-  font-weight: 400;
+img {
+  max-width: 100%;
+}
+.fw-medium {
+  font-weight: 500;
+}
+
+.width-input {
+  width: 15.9375rem;
+}
+
+.lh-input {
+  line-height: 1.375;
+}
+
+.imgCover {
+  object-fit: cover;
+}
+
+.borderRadius {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.borderShadow {
+  box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.card {
+  // height: 29.75rem;
+  .card-img-top {
+    max-width: 100%;
+    object-fit: cover;
+    height: 11.25rem;
+  }
 }

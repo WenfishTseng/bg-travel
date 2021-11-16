@@ -1,0 +1,41 @@
+img {
+  max-width: 100%;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.width-input {
+  width: 15.9375rem;
+}
+
+.lh-input {
+  line-height: 1.375;
+}
+
+.imgCover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.borderRadius {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  -webkit-box-shadow: 0px 3px 6px #00000029;
+          box-shadow: 0px 3px 6px #00000029;
+}
+
+.borderShadow {
+  -webkit-box-shadow: 0px 3px 6px #00000029;
+          box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.card .card-img-top {
+  max-width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 11.25rem;
+}
+/*# sourceMappingURL=all.css.map */
