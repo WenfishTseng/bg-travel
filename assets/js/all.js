@@ -37,12 +37,7 @@ chooseArea.addEventListener("change", function () {
     selectAry = newAry.filter(function (item) {
       return item.ticketArea === target;
     });
-  } // newAry.forEach((item) => {
-  //   if (target === item.ticketArea) {
-  //     selectAry.push(item);
-  //   }
-  // });
-
+  }
 
   renderData(selectAry);
 });
@@ -134,10 +129,63 @@ function renderData(data) {
   dataNum.textContent = data.length;
 }
 
+function initAreaData(data) {
+  var areaObj = {};
+  var areaAry = [];
+  data.forEach(function (item) {
+    var areaName = item.area;
+
+    if (areaObj[areaName] == undefined) {
+      areaObj[areaName] = 1;
+    } else {
+      areaObj[areaName] += 1;
+    }
+  });
+  var areaNameAry = Object.keys(areaObj);
+  console.log(areaNameAry); // ['高雄', '台北', '台中']
+
+  areaNameAry.forEach(function (item) {
+    var ary = [];
+    ary.push(item);
+    ary.push(areaObj[item]);
+    areaAry.push(ary);
+  });
+  console.log("areaAry", areaAry); // let areaAry = [
+  //   ["data1", 30],
+  //   ["data2", 120],
+  //   ["data3", 30],
+  // ];
+
+  renderDonutChart(areaAry);
+}
+
+function renderDonutChart(areaAry) {
+  var chart = c3.generate({
+    bindto: "#chart",
+    data: {
+      columns: areaAry,
+      type: "donut"
+    },
+    color: {
+      pattern: ["#5151D3", "#E68618", "#26C0C7"]
+    },
+    donut: {
+      title: "套票地區比重",
+      width: 20,
+      label: {
+        show: false
+      }
+    }
+  });
+}
+
 axios.get("https://raw.githubusercontent.com/hexschool/js-training/main/travelApi.json").then(function (response) {
   // handle success
   var axiosData = response.data.data;
   init(axiosData);
-  console.log("獲取資料");
+  initAreaData(axiosData);
+  console.log("獲取資料---");
+})["catch"](function (error) {
+  console.error(error);
 });
 //# sourceMappingURL=all.js.map
