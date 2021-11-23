@@ -28,6 +28,10 @@ addBtn.addEventListener("click", function (e) {
 });
 chooseArea.addEventListener("change", function () {
   var target = chooseArea.value;
+  singleData(target);
+});
+
+function singleData(target) {
   var selectAry = [];
   if (target === "") return;
 
@@ -40,7 +44,7 @@ chooseArea.addEventListener("change", function () {
   }
 
   renderData(selectAry);
-});
+}
 
 function clearInputWarnings() {
   var elInputWarnings = document.querySelectorAll(".alert-message");
@@ -122,18 +126,29 @@ function init(data) {
 
 function renderData(data) {
   var str = "";
+  var tempArea = data[0].ticketArea;
+  var temp = 1;
   data.forEach(function (item) {
+    if (tempArea != item.ticketArea) {
+      temp += 1;
+    }
+
     str += "\n            <li class=\"col-md-6 col-lg-4 mb-11\">\n            <div class=\"borderShadow card h-100 border-0 position-relative\">\n              <span\n                class=\"\n                  badge\n                  bg-secondary\n                  position-absolute\n                  top-0\n                  start-0\n                  translate-middle-y\n                  py-3\n                  px-7\n                  js-area\n                \"\n                style=\"font-size: 1.25rem\"\n                >".concat(item.ticketArea, "</span\n              >\n              <img\n                src=\"").concat(item.ticketImgUrl, "\"\n                class=\"card-img-top js-img\"\n                alt=\"photo-1\"\n              />\n              <div class=\"card-body position-relative pb-0\">\n                <span\n                  class=\"\n                    badge\n                    bg-primary\n                    position-absolute\n                    top-0\n                    start-0\n                    translate-middle-y\n                    py-1\n                    px-3\n                    fw-light\n                    js-rate\n                  \"\n                  style=\"font-size: 1rem\"\n                  >").concat(item.ticketRate, "</span\n                >\n                <h5\n                  class=\"\n                    card-title\n                    text-primary\n                    fw-medium\n                    border-bottom border-2 border-primary\n                    py-1\n                    h4\n                    js-title\n                  \"\n                >\n                  ").concat(item.ticketName, "\n                </h5>\n                <p class=\"card-text text-dark pt-6 fz-6 js-dis\">\n                 ").concat(item.ticketDes, " </p>\n              </div>\n              <div\n                class=\"\n                  card-footer\n                  d-flex\n                  text-primary\n                  justify-content-between\n                  mt-8\n                  py-0\n                  js-num\n                  bg-transparent border-0\n                \"\n              >\n                <p class=\"d-flex align-items-center\">\n                  <span class=\"material-icons me-2\"> error </span>\n                  \u5269\u4E0B\u6700\u5F8C ").concat(item.ticketNum, " \u7D44\n                </p>\n                <p class=\"d-flex align-items-center\">\n                  TWD<span class=\"h2 js-price\">$").concat(item.ticketPrice, " </span>\n                </p>\n              </div>\n            </div>\n          </li>\n  ");
   });
+  console.log("temp", temp);
   elList.innerHTML = str;
-  dataNum.textContent = data.length;
+  dataNum.textContent = data.length; // 若選取單一地區不改變圖表
+
+  if (temp > 1) {
+    initAreaData(data);
+  }
 }
 
 function initAreaData(data) {
   var areaObj = {};
   var areaAry = [];
   data.forEach(function (item) {
-    var areaName = item.area;
+    var areaName = item.ticketArea;
 
     if (areaObj[areaName] == undefined) {
       areaObj[areaName] = 1;
@@ -150,12 +165,7 @@ function initAreaData(data) {
     ary.push(areaObj[item]);
     areaAry.push(ary);
   });
-  console.log("areaAry", areaAry); // let areaAry = [
-  //   ["data1", 30],
-  //   ["data2", 120],
-  //   ["data3", 30],
-  // ];
-
+  console.log("areaAry", areaAry);
   renderDonutChart(areaAry);
 }
 
@@ -164,7 +174,12 @@ function renderDonutChart(areaAry) {
     bindto: "#chart",
     data: {
       columns: areaAry,
-      type: "donut"
+      type: "donut",
+      onclick: function onclick(d, i) {
+        console.log("onclick", d.id);
+        singleData(d.id);
+        chooseArea.value = d.id;
+      }
     },
     color: {
       pattern: ["#5151D3", "#E68618", "#26C0C7"]
@@ -183,8 +198,7 @@ axios.get("https://raw.githubusercontent.com/hexschool/js-training/main/travelAp
   // handle success
   var axiosData = response.data.data;
   init(axiosData);
-  initAreaData(axiosData);
-  console.log("獲取資料---");
+  console.log("獲取資料---", axiosData);
 })["catch"](function (error) {
   console.error(error);
 });
