@@ -23,6 +23,10 @@ addBtn.addEventListener("click", (e) => {
 
 chooseArea.addEventListener("change", () => {
   let target = chooseArea.value;
+  singleData(target);
+});
+
+function singleData(target) {
   let selectAry = [];
   if (target === "") return;
   if (target === "全部地區") {
@@ -32,13 +36,8 @@ chooseArea.addEventListener("change", () => {
       return item.ticketArea === target;
     });
   }
-  // newAry.forEach((item) => {
-  //   if (target === item.ticketArea) {
-  //     selectAry.push(item);
-  //   }
-  // });
   renderData(selectAry);
-});
+}
 
 function clearInputWarnings() {
   const elInputWarnings = document.querySelectorAll(".alert-message");
@@ -118,7 +117,12 @@ function init(data) {
 
 function renderData(data) {
   let str = "";
+  let tempArea = data[0].ticketArea;
+  let temp = 1;
   data.forEach((item) => {
+    if (tempArea != item.ticketArea) {
+      temp += 1;
+    }
     str += `
             <li class="col-md-6 col-lg-4 mb-11">
             <div class="borderShadow card h-100 border-0 position-relative">
@@ -199,8 +203,61 @@ function renderData(data) {
           </li>
   `;
   });
+  console.log("temp", temp);
   elList.innerHTML = str;
   dataNum.textContent = data.length;
+  // 若選取單一地區不改變圖表
+  if (temp > 1) {
+    initAreaData(data);
+  }
+}
+
+function initAreaData(data) {
+  let areaObj = {};
+  let areaAry = [];
+  data.forEach((item) => {
+    let areaName = item.ticketArea;
+    if (areaObj[areaName] == undefined) {
+      areaObj[areaName] = 1;
+    } else {
+      areaObj[areaName] += 1;
+    }
+  });
+  let areaNameAry = Object.keys(areaObj);
+  console.log(areaNameAry); // ['高雄', '台北', '台中']
+  areaNameAry.forEach((item) => {
+    let ary = [];
+    ary.push(item);
+    ary.push(areaObj[item]);
+    areaAry.push(ary);
+  });
+  console.log("areaAry", areaAry);
+  renderDonutChart(areaAry);
+}
+
+function renderDonutChart(areaAry) {
+  let chart = c3.generate({
+    bindto: "#chart",
+    data: {
+      columns: areaAry,
+      type: "donut",
+      onclick: function (d, i) {
+        console.log("onclick", d.id);
+        singleData(d.id);
+        chooseArea.value = d.id;
+      },
+    },
+    color: {
+      pattern: ["#5151D3", "#E68618", "#26C0C7"],
+    },
+    donut: {
+      title: "套票地區比重",
+      width: 20,
+      label: {
+        show: false,
+      },
+    },
+  });
 }
 
 axios
@@ -211,5 +268,8 @@ axios
     // handle success
     let axiosData = response.data.data;
     init(axiosData);
-    console.log("獲取資料");
+    console.log("獲取資料---", axiosData);
+  })
+  .catch((error) => {
+    console.error(error);
   });

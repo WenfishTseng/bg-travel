@@ -237,8 +237,8 @@ current: addPage
 </div>
 
 <section class="container my-10">
-  <div class="row pt-12 pb-8 align-items-center">
-    <div class="offset-1 col-3">
+  <div class="row pb-8 align-items-center">
+    <div class="offset-lg-1 col-lg-3">
       <select
         name="areaItem"
         class="js-select-area form-control w-100 lh-input bg-white py-3"
@@ -250,10 +250,13 @@ current: addPage
         <option value="高雄">高雄</option>
       </select>
     </div>
-    <div class="col-auto">
+    <div class="col-lg-3 mt-3 mt-lg-0">
       <p class="text-dark mb-0">
         本次搜尋共 <span class="js-num">3</span> 筆資料
       </p>
+    </div>
+    <div class="offset-lg-2 col-lg-2">
+      <div id="chart"></div>
     </div>
   </div>
   <ul class="row mt-11 js-list list-unstyled">
